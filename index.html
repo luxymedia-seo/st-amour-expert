@@ -1850,10 +1850,9 @@ function setLang(lang) {
   }
 })();
 
-/* ---------- Consultation form — thank-you redirect ---------- */
 var consultForm = document.getElementById('consultForm');
 if (consultForm) {
-  consultForm.addEventListener('submit', async function(e) {
+  consultForm.addEventListener('submit', function(e) {
     e.preventDefault();
     var btn = e.target.querySelector('button[type="submit"]');
     if (btn) {
@@ -1862,9 +1861,9 @@ if (consultForm) {
       btn.innerHTML = '<span class="btn-spinner"></span>' + loadingText;
     }
     var data = new FormData(e.target);
-    // Google Sheet + client email (Apps Script) — awaited so it has a chance to complete before redirect
+    // Google Sheet + client email (Apps Script) — fired without awaiting, keepalive lets it finish after redirect
     try {
-      await fetch('https://script.google.com/macros/s/AKfycbyYlEJrTokVNXirYoNsg-HEpK75DzLL16zabRzxxBitIbEO62uf5vcKUwcSGbHOS2A/exec',
+      fetch('https://script.google.com/macros/s/AKfycbyYlEJrTokVNXirYoNsg-HEpK75DzLL16zabRzxxBitIbEO62uf5vcKUwcSGbHOS2A/exec',
         { method: 'POST', body: new URLSearchParams(data), keepalive: true });
     } catch(err) {}
     var currentLang = document.documentElement.lang === 'en' ? 'en' : 'fr';
